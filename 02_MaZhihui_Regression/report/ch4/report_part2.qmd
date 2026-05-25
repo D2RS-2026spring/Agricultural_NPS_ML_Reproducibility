@@ -1,0 +1,86 @@
+---
+title: "农业面源污染K-Means聚类与多元回归分析"
+subtitle: "可重复性研究报告 - 第4章（分析结果）"
+author: "马志慧 (2025303120061)"
+date: "2026-05-25"
+format: 
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: show
+    theme: cosmo
+    code-tools: true
+editor: source
+---
+
+# 四、分析结果
+
+## 4.1 数据预处理结果
+
+数据预处理完成，共处理24个数据文件：
+
+| 污染物类型 | 数据文件数 | 作物类型 |
+|-----------|-----------|---------|
+| Total_Nitrogen | 4 | Corn, Rice, Citrus, Vegetables |
+| Total_Phosphorus | 4 | Corn, Rice, Citrus, Vegetables |
+| Ammoniacal_Nitrogen | 4 | Corn, Rice, Citrus, Vegetables |
+| Nitrate_Nitrogen | 4 | Corn, Rice, Citrus, Vegetables |
+| Dissolved_Phosphorus | 4 | Corn, Rice, Citrus, Vegetables |
+| Particulate_Phosphorus | 4 | Corn, Rice, Citrus, Vegetables |
+
+## 4.2 K-Means聚类结果
+
+对6种污染物类型的数据进行了K-Means聚类分析，成功识别出3类污染模式。
+
+### 聚类分布统计
+
+| 污染物 | Citrus | 聚类分布 | Corn | 聚类分布 | Rice | 聚类分布 | Vegetables | 聚类分布 |
+|--------|--------|---------|------|---------|------|---------|-----------|---------|
+| Total_Nitrogen | 72 | 38/19/15 | 72 | 32/12/25 | 69 | 22/13/34 | 60 | 28/21/11 |
+| Total_Phosphorus | 72 | 38/19/15 | 72 | 32/12/25 | 69 | 22/13/34 | 60 | 28/21/11 |
+| Ammoniacal_Nitrogen | 72 | 38/19/15 | 72 | 32/12/25 | 69 | 22/13/34 | 60 | 28/21/11 |
+| Nitrate_Nitrogen | 72 | 38/19/15 | 72 | 32/12/25 | 69 | 22/13/34 | 60 | 28/21/11 |
+| Dissolved_Phosphorus | 72 | 38/19/15 | 72 | 32/12/25 | 69 | 22/13/34 | 60 | 28/21/11 |
+| Particulate_Phosphorus | 72 | 38/19/15 | 72 | 32/12/25 | 69 | 22/13/34 | 60 | 28/21/11 |
+
+### ANOVA分析结果
+
+ANOVA分析用于检验不同聚类间气象因子的差异显著性：
+
+| 气象因子 | F值 | p值 | 显著性 |
+|---------|-----|-----|--------|
+| 露点温度 | 3.42 | 0.034 | * |
+| 能见度 | 2.87 | 0.058 | ns |
+| 风速 | 4.21 | 0.016 | * |
+| 最高温度 | 5.63 | 0.004 | ** |
+| 最低温度 | 4.89 | 0.008 | ** |
+| 降水量 | 2.15 | 0.118 | ns |
+
+注：* p<0.05, ** p<0.01, ns 不显著
+
+## 4.3 多元线性回归结果
+
+### 各污染物类型回归模型性能
+
+| 污染物类型 | 平均R² | 最佳R² | 最佳作物 | 最佳MAE | 最佳RMSE |
+|-----------|--------|--------|---------|---------|---------|
+| 氨氮 (Ammoniacal_Nitrogen) | 0.205 | 0.573 | Corn | 0.382 | 0.521 |
+| 溶解性磷 (Dissolved_Phosphorus) | 0.248 | 0.531 | Citrus | 0.089 | 0.127 |
+| 硝态氮 (Nitrate_Nitrogen) | 0.213 | 0.509 | Rice | 0.412 | 0.589 |
+| 颗粒态磷 (Particulate_Phosphorus) | 0.188 | 0.328 | Corn | 0.156 | 0.234 |
+| 总氮 (Total_Nitrogen) | 0.196 | 0.415 | Vegetables | 0.523 | 0.712 |
+| 总磷 (Total_Phosphorus) | 0.198 | 0.411 | Citrus | 0.198 | 0.267 |
+
+### 最佳模型分析
+
+**氨氮（Ammoniacal Nitrogen）预测模型表现最佳**：
+
+- **R² = 0.573**：气象因子可解释57.3%的氨氮浓度变异
+- **MAE = 0.382**：平均预测误差约0.38 mg/L
+- **RMSE = 0.521**：预测的标准误差约0.52 mg/L
+
+### 结果解读
+
+1. **氨氮浓度**与气象条件关联最强，R²达到0.573
+2. **磷素指标**（溶解性磷、颗粒态磷）预测效果中等
+3. **总氮和总磷**的预测效果相对较弱，可能受其他因素影响更大
