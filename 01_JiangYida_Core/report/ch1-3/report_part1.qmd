@@ -1,0 +1,135 @@
+---
+title: "农业面源污染K-Means聚类与多元回归分析"
+subtitle: "可重复性研究报告 - 第1-3章（概述与方法）"
+author: "蒋奕达 (2025303110130)"
+date: "2026-05-25"
+format: 
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: show
+    theme: cosmo
+    code-tools: true
+editor: source
+---
+
+# 一、研究概述
+
+## 1.1 项目背景
+
+本研究对发表在 *Sustainability* 期刊上的论文《Machine Learning for Agricultural Nonpoint Source Pollution Analysis: Insights from 5 Year Site-Specific Tracking》进行完整的可重复性研究评估。
+
+**研究目标**：
+1. 验证原文数据和代码的可获取性
+2. 复现论文中的K-Means聚类分析
+3. 复现论文中的多元线性回归模型
+4. 评估可重复性并撰写报告
+
+## 1.2 研究区域与数据
+
+- **研究时段**：2017-2021年（5年连续监测）
+- **研究区域**：美国北卡罗来纳州 NCSU Lake Wheeler Road Field Laboratory (LWRFL)
+- **监测网络**：5个气象站 + 水质监测点
+
+| 数据类型 | 数量 | 说明 |
+|---------|------|------|
+| 污染物类型 | 6种 | Total N, Total P, NH₃-N, NO₃-N, Dissolved P, Particulate P |
+| 作物类型 | 4种 | Corn, Rice, Citrus, Vegetables |
+| 数据文件 | 24个 | 6种污染物 × 4种作物 |
+| 总样本数 | ~270 | 各作物60-72个样本 |
+
+## 1.3 研究方法
+
+本研究使用两种机器学习方法：
+
+1. **K-Means聚类**：识别不同的气象模式/污染情景
+2. **多元线性回归（MLR）**：建立气象因子与水质参数的关系模型
+
+---
+
+# 二、环境配置与复现步骤
+
+## 2.1 环境要求
+
+```powershell
+# Python版本要求
+Python >= 3.10
+
+# 使用uv安装依赖
+uv venv --python 3.10
+uv pip install pandas numpy matplotlib seaborn scikit-learn statsmodels openpyxl
+```
+
+## 2.2 复现步骤
+
+```powershell
+# 1. 克隆仓库
+git clone https://github.com/D2RS-2026spring/Agricultural_NPS_ML_Reproducibility.git
+
+# 2. 安装依赖
+cd Agricultural_NPS_ML_Reproducibility
+uv pip install -r requirements.txt
+
+# 3. 运行分析
+python code/01_data_preprocessing.py
+python code/02_kmeans_clustering.py
+python code/03_multiple_regression.py
+python code/04_visualization.py
+
+# 4. 生成报告
+quarto render report/reproducibility_report.qmd
+```
+
+---
+
+# 三、分析方法详解
+
+## 3.1 K-Means聚类分析
+
+### 算法原理
+
+K-Means是一种无监督学习方法，将样本划分为K个簇，使得簇内样本的相似度最高。
+
+**算法参数**：
+- 聚类数量：K=3
+- 特征：NPK, PK, NK, CK, OF（不同施肥处理）
+- 降维：PCA（2维）用于可视化
+
+### 实现代码
+
+```{python}
+#| label: kmeans-algorithm
+#| echo: true
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+
+# K-Means聚类参数
+print("=" * 50)
+print("K-Means聚类参数配置")
+print("=" * 50)
+print(f"聚类数量 (K): 3")
+print(f"特征变量: NPK, PK, NK, CK, OF")
+print(f"降维方法: PCA (2维)")
+print(f"初始化方法: k-means++")
+print(f"最大迭代次数: 300")
+print("=" * 50)
+```
+
+## 3.2 多元线性回归
+
+### 回归模型
+
+$$Y_j = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + ... + \beta_p X_p + \varepsilon$$
+
+**变量说明**：
+- $Y_j$：因变量（总氮、总磷等水质参数）
+- $X_i$：自变量（气象因子：温度、风速、降水量等）
+- $\beta$：回归系数
+- $\varepsilon$：误差项
+
+### 评估指标
+
+- **R²（决定系数）**：模型解释的方差比例
+- **MAE（平均绝对误差）**：预测值与真实值的平均绝对偏差
+- **RMSE（均方根误差）**：预测误差的标准差
