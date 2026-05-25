@@ -1,0 +1,112 @@
+---
+title: "农业面源污染K-Means聚类与多元回归分析"
+subtitle: "可重复性研究报告 - 第5-7章（评估与结论）"
+author: "马明玮 (2025303120062)"
+date: "2026-05-25"
+format: 
+  html:
+    toc: true
+    toc-depth: 3
+    code-fold: show
+    theme: cosmo
+    code-tools: true
+editor: source
+---
+
+# 五、可重复性评估
+
+## 5.1 评估维度
+
+| 评估维度 | 评分 | 说明 |
+|---------|------|------|
+| 数据可获取性 | ★★★★★ | 原始数据可从GitHub仓库直接获取 |
+| 代码可运行性 | ★★★★★ | 代码结构清晰，依赖明确，可直接运行 |
+| 结果可复现性 | ★★★★☆ | 核心结果一致，个别数值略有差异 |
+| 文档完整性 | ★★★★★ | README详细，包含完整复现步骤 |
+| 综合评分 | 4.6/5 | 高度可重复 |
+
+## 5.2 复现过程中遇到的问题及解决方案
+
+### 问题1：数据文件编码问题
+
+**现象**：部分CSV文件包含中文表头，读取时出现编码错误
+
+**解决**：指定UTF-8编码
+```python
+pd.read_csv(file, encoding='utf-8')
+```
+
+### 问题2：中文字体显示
+
+**现象**：matplotlib图表中文显示为方框
+
+**解决**：配置中文字体
+```python
+plt.rcParams['font.sans-serif'] = ['SimHei', 'Microsoft YaHei']
+plt.rcParams['axes.unicode_minus'] = False
+```
+
+### 问题3：statsmodels版本兼容
+
+**现象**：部分函数在新版本中有参数变化
+
+**解决**：使用通用参数，兼容多个版本
+
+---
+
+# 六、研究结论
+
+## 6.1 主要发现
+
+1. **聚类分析**：成功识别出3类污染模式，ANOVA分析显示温度相关因子在不同聚类间存在显著差异（p < 0.01）
+
+2. **回归分析**：最佳模型R²达到0.573（氨氮），表明气象因子对农业面源污染有一定预测能力
+
+3. **可重复性**：该项目具有较高的可重复性，适合作为可重复研究的教学案例
+
+## 6.2 应用价值
+
+- 研究方法可迁移应用于五龙池研究区的面源污染分析
+- K-Means+MLR组合为农业面源污染研究提供参考框架
+
+## 6.3 改进建议
+
+1. 增加时间序列分析，探索气象-水质关系的滞后效应
+2. 引入更多气象因子（如辐射、蒸发量）提升模型性能
+3. 考虑使用深度学习方法（LSTM）捕捉非线性关系
+
+---
+
+# 七、技术附录
+
+## 7.1 环境信息
+
+| 环境信息 | 版本/内容 |
+|---------|----------|
+| Python | 3.10+ |
+| pandas | 2.0.0+ |
+| numpy | 1.24.0+ |
+| scikit-learn | 1.3.0+ |
+| statsmodels | 0.14.0+ |
+| Quarto | 最新版 |
+
+## 7.2 文件清单
+
+| 文件类型 | 数量 | 说明 |
+|---------|------|------|
+| Python脚本 | 4 | 预处理、聚类、回归、可视化 |
+| 聚类结果 | 25+ | CSV + PNG散点图 |
+| 回归结果 | 6 | CSV格式 |
+| 可视化图表 | 9+ | PNG格式 |
+| 日志文件 | 1 | 执行日志 |
+
+## 7.3 参考资料
+
+1. **原始论文**：Gao C-H et al. Machine Learning for Agricultural Nonpoint Source Pollution Analysis. *Sustainability* 2026, 18(1), 13.  
+   DOI: https://doi.org/10.3390/su18010013
+
+2. **原始代码仓库**：https://github.com/jr198868/Machine_Learning_Nonpoint_Source_Pollution
+
+3. **scikit-learn文档**：https://scikit-learn.org/stable/modules/clustering.html#k-means
+
+4. **statsmodels文档**：https://www.statsmodels.org/stable/regression.html
