@@ -21,7 +21,7 @@ jobs:
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
         with:
-          version: '1.4.553'
+          version: latest
 
       - name: Install Python and dependencies
         uses: actions/setup-python@v5
@@ -32,14 +32,26 @@ jobs:
         run: |
           pip install jupyter pandas numpy matplotlib seaborn scikit-learn statsmodels openpyxl
 
+      - name: Debug - List files
+        run: |
+          echo "=== Root directory ==="
+          ls -la
+          echo "=== Report directory ==="
+          ls -la report/
+          echo "=== Quarto version ==="
+          quarto --version
+
       - name: Render Quarto
         run: |
-          ls -la report/
-          quarto render report/reproducibility_report.qmd --to html
+          quarto render report/reproducibility_report.qmd --to html --output output
+
+      - name: Debug - Check output
+        run: |
+          ls -la output/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./report
+          publish_dir: ./output
           publish_branch: gh-pages
